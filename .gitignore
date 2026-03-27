@@ -1,25 +1,15 @@
-# Dependencies
 node_modules/
-# Logs
+
 *.log
 npm-debug.log*
-# Environment (safe to include even if unused)
 .env
 .env.*.local
-# OS/editor
+
 .DS_Store
 Thumbs.db
 .vscode/
-Third-party packages installed by npm in your future pracs. Large and rebuildable.
-Commiting it bloats the repo and causes merge pain.
-Runtime and crash logs. Useful locally only. Not source code. Regenerated on each
-run.
+
 .DS_Store
-macOS Finder metadata. Machine-specific clutter. Safe to ignore.
 Thumbs.db
-Windows Explorer cache. Machine-specific. Safe to ignore.
 .vscode/
-Editor settings and local extensions. Personal configuration. Avoids editor-specific
-noise.
-Environment variables: DB URI, secrets, ports. Must not be
-public.
+

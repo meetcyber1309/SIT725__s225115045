@@ -1,0 +1,14 @@
+{
+  "name": "bookhub-app",
+  "version": "1.0.0",
+  "description": "Book Library Web App using Express and Materialize",
+  "main": "server/server.js",
+  "scripts": {
+    "start": "node server/server.js"
+  },
+  "author": "Your Name",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
