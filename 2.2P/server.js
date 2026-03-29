@@ -1,3 +1,4 @@
+
 const express = require('express');
 const app = express();
 const port = 3000;
@@ -20,3 +21,20 @@ app.get("/addTwoNumbers", (req, res) => {
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
 });
+
+const express = require('express');
+const app = express();
+const PORT = 3000;
+
+// Serve static files from public folder
+app.use(express.static('public'));
+
+// Basic endpoint
+app.get('/', (req, res) => {
+    res.send('Server is running 🚀');
+});
+
+app.listen(PORT, () => {
+    console.log(`Server running at http://localhost:${PORT}`);
+});
+
