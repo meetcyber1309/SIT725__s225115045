@@ -16,6 +16,7 @@ app.get("/addTwoNumbers", (req, res) => {
     res.json({status: 200, data: n1 + n2});
 });
 
+
 app.listen(port, () => {
     console.log(`Server listening at http://localhost:${port}`);
 });
