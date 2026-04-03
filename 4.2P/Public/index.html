@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Book Library</title>
+</head>
+<body>
+
+  <h1>📚 My Book Library</h1>
+
+  <h2>Add a Book</h2>
+  <input type="text"   id="title"         placeholder="Title"        /> <br/><br/>
+  <input type="text"   id="author"        placeholder="Author"       /> <br/><br/>
+  <input type="text"   id="genre"         placeholder="Genre"        /> <br/><br/>
+  <input type="number" id="yearPublished" placeholder="Year"         /> <br/><br/>
+  <input type="number" id="rating"        placeholder="Rating (1-5)" /> <br/><br/>
+  <button onclick="addBook()">Add Book</button>
+
+  <h2>All Books</h2>
+  <div id="booksList"></div>
+
+  <script>
+    async function loadBooks() {
+      const res   = await fetch("/api/books");
+      const books = await res.json();
+
+      const container = document.getElementById("booksList");
+      container.innerHTML = "";
+
+      if (books.length === 0) {
+        container.innerHTML = "<p>No books yet. Add one above!</p>";
+        return;
+      }
+
+      books.forEach(book => {
+        container.innerHTML += `
+          <div style="border: 1px solid #ccc; padding: 10px; margin: 10px 0;">
+            <h3>${book.title}</h3>
+            <p>by ${book.author} | ${book.genre} | ⭐ ${book.rating} | ${book.yearPublished}</p>
+            <button onclick="deleteBook('${book._id}')">Delete</button>
+          </div>
+        `;
+      });
+    }
+
+    async function addBook() {
+      const title         = document.getElementById("title").value.trim();
+      const author        = document.getElementById("author").value.trim();
+      const genre         = document.getElementById("genre").value.trim();
+      const yearPublished = document.getElementById("yearPublished").value;
+      const rating        = document.getElementById("rating").value;
+
+      // Check all fields are filled
+      if (!title || !author || !genre || !yearPublished || !rating) {
+        alert("Please fill in all fields!");
+        return;
+      }
+
+      const res = await fetch("/api/books", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, author, genre, yearPublished, rating }),
+      });
+
+      const data = await res.json();
+      console.log("Add response:", data); // check console if something goes wrong
+
+      // Clear all inputs after adding
+      document.getElementById("title").value         = "";
+      document.getElementById("author").value        = "";
+      document.getElementById("genre").value         = "";
+      document.getElementById("yearPublished").value = "";
+      document.getElementById("rating").value        = "";
+
+      loadBooks(); // refresh the list
+    }
+
+    async function deleteBook(id) {
+      console.log("Deleting id:", id); // check console if something goes wrong
+
+      const res  = await fetch("/api/books/" + id, { method: "DELETE" });
+      const data = await res.json();
+      console.log("Delete response:", data); // check console if something goes wrong
+
+      loadBooks(); // refresh the list
+    }
+
+    loadBooks();
+  </script>
+
+</body>
+</html>
