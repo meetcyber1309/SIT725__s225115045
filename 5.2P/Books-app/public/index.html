@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Books Catalog</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .book-card { border-bottom: 1px solid #ddd; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Book Catalog</h1>
+    <div id="book-list"></div>
+
+    <script>
+        const fetchBooks = async () => {
+            const response = await fetch('/api/books');
+            const result = await response.json();
+            
+            // Accessing result.data because of our updated controller
+            const books = result.data;
+            const listDiv = document.getElementById('book-list');
+            
+            listDiv.innerHTML = books.map(book => `
+                <div class="book-card">
+                    <strong>${book.title}</strong> by ${book.author}
+                </div>
+            `).join('');
+        };
+
+        window.onload = fetchBooks;
+    </script>
+</body>
+</html>
