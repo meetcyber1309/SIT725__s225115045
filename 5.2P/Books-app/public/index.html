@@ -3,31 +3,53 @@
 <head>
     <title>Books Catalog</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; }
-        .book-card { border-bottom: 1px solid #ddd; padding: 10px; }
+        body { font-family: sans-serif; padding: 20px; }
+        .book-item { color: blue; cursor: pointer; margin: 10px 0; text-decoration: underline; }
+        #details-panel { margin-top: 20px; border: 1px solid #000; padding: 15px; display: none; }
     </style>
 </head>
 <body>
-    <h1>Book Catalog</h1>
+    <h1>Books Catalogue developed by s225115045</h1> <p>Click the button below to get all books from the server:</p>
+    <button onclick="getAllBooks()">Get all books</button>
+
     <div id="book-list"></div>
 
+    <div id="details-panel">
+        <h3>Book Details</h3>
+        <div id="details-content"></div>
+    </div>
+
     <script>
-        const fetchBooks = async () => {
+        async function getAllBooks() {
             const response = await fetch('/api/books');
             const result = await response.json();
-            
-            // Accessing result.data because of our updated controller
-            const books = result.data;
             const listDiv = document.getElementById('book-list');
             
-            listDiv.innerHTML = books.map(book => `
-                <div class="book-card">
-                    <strong>${book.title}</strong> by ${book.author}
+            // Render title and price only [cite: 36-43]
+            listDiv.innerHTML = result.data.map(book => `
+                <div class="book-item" onclick="getBookDetails('${book.id}')">
+                    ${book.title} ${book.price.$numberDecimal} AUD
                 </div>
             `).join('');
-        };
+        }
 
-        window.onload = fetchBooks;
+        async function getBookDetails(id) {
+            const response = await fetch(`/api/books/${id}`);
+            const result = await response.json();
+            const book = result.data;
+            const panel = document.getElementById('details-panel');
+            const content = document.getElementById('details-content');
+
+            panel.style.display = 'block';
+            content.innerHTML = `
+                <p><strong>Title:</strong> ${book.title}</p>
+                <p><strong>Author:</strong> ${book.author}</p>
+                <p><strong>Year:</strong> ${book.year}</p>
+                <p><strong>Genre:</strong> ${book.genre}</p>
+                <p><strong>Summary:</strong> ${book.summary}</p>
+                <p><strong>Price (AUD):</strong> ${book.price.$numberDecimal}</p>
+            `;
+        }
     </script>
 </body>
 </html>

@@ -1,17 +1,17 @@
 const bookService = require('../services/booksService');
 
-const getAllBooks = (req, res) => {
+exports.getAllBooks = async (req, res) => {
     try {
-        const books = bookService.getAllBooks();
+        const books = await bookService.getAllBooks();
         res.json({ statusCode: 200, data: books, message: "Success" });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 };
 
-const getBookById = (req, res) => {
+exports.getBookById = async (req, res) => {
     try {
-        const book = bookService.getBookById(req.params.id);
+        const book = await bookService.getBookById(req.params.id);
         if (book) {
             res.json({ statusCode: 200, data: book, message: "Success" });
         } else {
@@ -20,9 +20,4 @@ const getBookById = (req, res) => {
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
-};
-
-module.exports = {
-    getAllBooks,
-    getBookById
 };
