@@ -1,0 +1,32 @@
+const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
+
+app.use(express.static('public'));
+
+io.on('connection', (socket) => {
+    console.log('A team member joined the project session');
+
+    // Custom Event: When a user updates a task status
+    socket.on('taskUpdate', (data) => {
+        // Broadcast the update to EVERYONE connected
+        io.emit('displayUpdate', {
+            user: data.user,
+            task: data.task,
+            time: new Date().toLocaleTimeString()
+        });
+    });
+
+    socket.on('disconnect', () => {
+        console.log('User disconnected');
+    });
+});
+
+const PORT = 3000;
+server.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Socket Project Tracker</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f9; }
+        #log { background: white; padding: 10px; border: 1px solid #ccc; height: 200px; overflow-y: scroll; }
+        .entry { margin-bottom: 5px; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <h2> Live Project Status</h2>
+    
+    <input type="text" id="username" placeholder="Your Name">
+    <input type="text" id="task" placeholder="What are you working on?">
+    <button onclick="sendUpdate()">Post Update</button>
+
+    <h3>Activity Feed:</h3>
+    <div id="log"></div>
+
+    <script>
+        const socket = io();
+
+        function sendUpdate() {
+            const user = $('#username').val();
+            const task = $('#task').val();
+            if(user && task) {
+                // Emit the custom event 'taskUpdate'
+                socket.emit('taskUpdate', { user, task });
+                $('#task').val(''); // Clear input
+            }
+        }
+
+        // Listen for 'displayUpdate' from the server
+        socket.on('displayUpdate', (data) => {
+            $('#log').append(`
+                <div class="entry">
+                    <strong>${data.time} - ${data.user}:</strong> ${data.task}
+                </div>
+            `);
+            // Auto-scroll to bottom
+            $('#log').scrollTop($('#log')[0].scrollHeight);
+        });
+    </script>
+</body>
+</html>
